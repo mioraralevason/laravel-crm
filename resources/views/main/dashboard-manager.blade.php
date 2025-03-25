@@ -6,179 +6,464 @@
   <title>Manager Dashboard - New App</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #4361ee;
-      --secondary-color: #3f37c9;
+      --primary-color: #3a86ff;
+      --primary-dark: #2563eb;
+      --primary-light: #60a5fa;
+      --secondary-color: #4361ee;
       --accent-color: #4895ef;
-      --light-color: #f8f9fa;
-      --dark-color: #212529;
-      --success-color: #4cc9f0;
-      --warning-color: #f72585;
-      --info-color: #560bad;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --info-color: #6366f1;
+      
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --header-bg: #ffffff;
+      
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --text-muted: #94a3b8;
+      --text-light: #f8fafc;
+      
+      --border-color: #e2e8f0;
+      --border-radius: 16px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02);
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f5f7fa;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      line-height: 1.5;
     }
 
+    /* Layout Structure */
+    .dashboard-wrapper {
+      display: flex;
+    }
+
+    .dashboard-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin-left: 280px;
+      transition: margin-left 0.3s ease;
+    }
+
+    /* Header Styles */
     .header {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background-color: var(--header-bg);
       padding: 1rem 1.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+      border-bottom: 1px solid var(--border-color);
     }
 
-    h1 {
-      font-weight: 600;
-      font-size: 1.5rem;
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .page-title {
+      font-weight: 700;
+      font-size: 1.25rem;
       margin: 0;
-      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .page-title i {
+      font-size: 1.5rem;
+      color: var(--primary-color);
     }
 
     .user-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 1rem;
+    }
+
+    .user-welcome {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .user-welcome strong {
+      font-weight: 600;
+      color: var(--text-primary);
     }
 
     .avatar {
       width: 40px;
       height: 40px;
       border-radius: 50%;
-      background-color: rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 1.2rem;
+      color: white;
+      box-shadow: var(--shadow-md);
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .avatar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+      border-radius: 50%;
     }
 
     .avatar:hover {
-      background-color: rgba(255, 255, 255, 0.3);
       transform: scale(1.05);
+      box-shadow: var(--shadow-lg);
     }
 
-    main {
-      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
-      min-height: calc(100vh - 70px);
+    /* Main Content Area */
+    .main-content {
+      flex-grow: 1;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto;
+      gap: 1.5rem;
+    }
+
+    /* Alert Styles */
+    .alert-container {
+      grid-column: span 12;
+    }
+
+    .alert {
+      border-radius: 12px;
+      border: none;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 0;
+    }
+
+    .alert-danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      color: #b91c1c;
+      border-left: 4px solid var(--danger-color);
+    }
+
+    .alert i {
+      font-size: 1.25rem;
+    }
+
+    /* Welcome and Stats Section */
+    .welcome-stats-container {
+      grid-column: span 12;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+    }
+
+    .welcome-card {
+      grid-column: span 8;
+      border-radius: var(--border-radius);
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      position: relative;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .welcome-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+      opacity: 0.1;
+      border-radius: 50%;
+      transform: translate(30%, -30%);
+    }
+
+    .welcome-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--info-color) 100%);
+      opacity: 0.1;
+      border-radius: 50%;
+      transform: translate(-30%, 30%);
+    }
+
+    .welcome-card .card-body {
+      position: relative;
+      z-index: 1;
       padding: 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .welcome-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .welcome-title i {
+      font-size: 1.75rem;
+      color: var(--primary-color);
+      background: rgba(58, 134, 255, 0.1);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+    }
+
+    .welcome-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .welcome-text strong {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+      grid-column: span 4;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
     .stat-card {
-      border-radius: 15px;
-      border: none;
+      border-radius: var(--border-radius);
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow-md);
       transition: all 0.3s ease;
       overflow: hidden;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      position: relative;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .stat-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow-lg);
     }
 
-    .stat-card:first-child .stat-icon {
-      background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+      opacity: 0.8;
     }
 
-    .stat-card:nth-child(2) .stat-icon {
-      background: linear-gradient(45deg, var(--info-color), var(--success-color));
+    .stat-card:nth-child(2)::before {
+      background: linear-gradient(to bottom, var(--info-color), var(--accent-color));
+    }
+
+    .stat-card .card-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .stat-content {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1rem;
     }
 
     .stat-icon {
-      font-size: 2.2rem;
-      color: #fff;
-      padding: 18px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 1.75rem;
+      color: white;
+      box-shadow: var(--shadow-md);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    }
+
+    .stat-card:nth-child(2) .stat-icon {
+      background: linear-gradient(135deg, var(--info-color), var(--accent-color));
+    }
+
+    .stat-info {
+      display: flex;
+      flex-direction: column;
     }
 
     .stat-number {
-      font-size: 2rem;
+      font-size: 1.75rem;
       font-weight: 700;
-      color: var(--dark-color);
-      line-height: 1;
-      margin-bottom: 5px;
+      color: var(--text-primary);
+      line-height: 1.2;
     }
 
     .stat-label {
-      color: #64748b;
-      font-size: 1rem;
+      font-size: 0.875rem;
       font-weight: 500;
+      color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
-    .welcome-card {
-      border-radius: 15px;
-      background: linear-gradient(to right, var(--light-color), #dfe7f5);
-      border: none;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      margin-bottom: 2rem;
-    }
-
-    .welcome-card:hover {
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-title {
-      color: var(--dark-color);
-      font-weight: 600;
-    }
-
     .btn-details {
-      background-color: var(--primary-color);
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
       border: none;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      font-weight: 500;
-      letter-spacing: 0.5px;
+      border-radius: 12px;
+      padding: 0.75rem 1.25rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
       transition: all 0.3s ease;
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+      margin-top: auto;
+    }
+
+    .stat-card:nth-child(2) .btn-details {
+      background: linear-gradient(135deg, var(--info-color), var(--accent-color));
     }
 
     .btn-details:hover {
-      background-color: var(--secondary-color);
       transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-md);
+      color: white;
     }
 
-    /* Chart Card Styles */
+    .btn-details:active {
+      transform: translateY(0);
+    }
+
+    /* Chart Layout */
+    .chart-layout {
+      grid-column: span 12;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+    }
+
+    .chart-section-header {
+      grid-column: span 12;
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    .section-title i {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+    }
+
+    .section-line {
+      flex-grow: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--border-color) 0%, rgba(226, 232, 240, 0.1) 100%);
+      margin-left: 1.5rem;
+    }
+
+    /* Chart Cards */
     .chart-card {
-      border-radius: 15px;
-      border: none;
+      border-radius: var(--border-radius);
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow-md);
       transition: all 0.3s ease;
       overflow: hidden;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      background-color: white;
+      height: 100%;
     }
 
     .chart-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .chart-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
 
     .chart-title {
-      font-size: 1.1rem;
+      font-size: 1.125rem;
       font-weight: 600;
-      color: var(--dark-color);
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-      display: flex;
-      align-items: center;
+      color: var(--text-primary);
+      margin: 0;
     }
 
     .chart-icon {
-      margin-right: 10px;
+      font-size: 1.25rem;
       color: var(--primary-color);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(58, 134, 255, 0.1);
+      border-radius: 8px;
     }
 
     .chart-container {
@@ -187,227 +472,274 @@
       height: 350px;
     }
 
-    /* Animation for cards */
+    .pie-chart-card {
+      grid-column: span 4;
+    }
+
+    .bar-chart-card {
+      grid-column: span 8;
+    }
+
+    .line-chart-card {
+      grid-column: span 12;
+    }
+
+    /* Animations */
     @keyframes fadeInUp {
       from {
         opacity: 0;
-        transform: translate3d(0, 30px, 0);
+        transform: translateY(20px);
       }
       to {
         opacity: 1;
-        transform: translate3d(0, 0, 0);
+        transform: translateY(0);
       }
     }
 
-    .stat-card, .chart-card {
+    .welcome-card, .stat-card, .chart-card {
       animation: fadeInUp 0.5s ease-out forwards;
     }
 
-    .stat-card:nth-child(2), .chart-card:nth-child(2) {
+    .stat-card:nth-child(2) {
+      animation-delay: 0.1s;
+    }
+
+    .pie-chart-card {
       animation-delay: 0.2s;
     }
 
-    .chart-card:nth-child(3) {
+    .bar-chart-card {
+      animation-delay: 0.3s;
+    }
+
+    .line-chart-card {
       animation-delay: 0.4s;
     }
 
-    /* Section Divider */
-    .section-divider {
-      display: flex;
-      align-items: center;
-      margin: 2rem 0;
+    /* Responsive Adjustments - Matching previous behavior */
+    @media (max-width: 768px) {
+      .dashboard-content {
+        margin-left: 80px;
+      }
+      
+      .welcome-stats-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .welcome-card {
+        grid-column: span 12;
+      }
+      
+      .stats-container {
+        grid-column: span 12;
+        flex-direction: row;
+      }
+      
+      .stat-card {
+        flex: 1;
+      }
+      
+      .pie-chart-card {
+        grid-column: span 12;
+      }
+      
+      .bar-chart-card {
+        grid-column: span 12;
+      }
+      
+      .welcome-title {
+        font-size: 1.25rem;
+      }
+      
+      .welcome-title i {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+      }
+      
+      .stat-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 1.5rem;
+      }
+      
+      .stat-number {
+        font-size: 1.5rem;
+      }
+      
+      .btn-details {
+        padding: 0.5rem 1rem;
+      }
     }
 
-    .section-divider h2 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--dark-color);
-      margin: 0;
-      display: flex;
-      align-items: center;
-    }
-
-    .section-divider i {
-      margin-right: 10px;
-      color: var(--primary-color);
-    }
-
-    .section-divider .line {
-      flex-grow: 1;
-      height: 1px;
-      background-color: rgba(0, 0, 0, 0.1);
-      margin-left: 15px;
+    @media (max-width: 576px) {
+      .user-welcome {
+        display: none;
+      }
+      
+      .welcome-card .card-body {
+        padding: 1.5rem;
+      }
+      
+      .stats-container {
+        flex-direction: column;
+      }
+      
+      .chart-container {
+        height: 300px;
+      }
+      
+      .main-content {
+        padding: 1rem;
+        gap: 1rem;
+      }
+      
+      .welcome-stats-container,
+      .chart-layout {
+        gap: 1rem;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="d-flex">
+  <div class="dashboard-wrapper">
     @include('layouts.sidebar')
 
-    <div class="flex-grow-1">
+    <div class="dashboard-content">
       <header class="header">
-        <div class="d-flex justify-content-between align-items-center">
-          <h1>
-            <i class="bi bi-layout-text-window-reverse me-2"></i>
+        <div class="header-content">
+          <h1 class="page-title">
+            <i class="bi bi-grid-1x2-fill"></i>
+            Dashboard
           </h1>
           <div class="user-info">
-            <span class="d-none d-md-inline">Welcome, <strong>{{ session('username', 'Manager') }}</strong></span>
+            <span class="user-welcome d-none d-md-inline">Welcome back, <strong>{{ session('username', 'Manager') }}</strong></span>
             <div class="avatar">
               <i class="bi bi-person-fill"></i>
             </div>
           </div>
         </div>
       </header>
-      <main>
-        <div class="container-fluid"> 
-          @if(isset($error))
-            <div class="alert alert-danger d-flex align-items-center" role="alert">
-              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      
+      <div class="main-content">
+        <!-- Alert -->
+        @if(isset($error))
+          <div class="alert-container">
+            <div class="alert alert-danger" role="alert">
+              <i class="bi bi-exclamation-triangle-fill"></i>
               <div>{{ $error }}</div>
             </div>
-          @endif
+          </div>
+        @endif
 
-          <div class="row">
-            <div class="col-md-12">
-              <div class="card welcome-card">
-                <div class="card-body p-4">
-                  <h5 class="card-title d-flex align-items-center">
-                    <i class="bi bi-stars me-2 text-primary"></i>
-                    Welcome to your Dashboard
-                  </h5>
-                  <p class="card-text">
-                    Hello, <strong>{{ session('username', 'Manager') }}</strong>! This is your control center for managing all aspects of your business. Use the sidebar navigation to access different sections of the application.
-                  </p>
-                </div>
-              </div>
+        <!-- Welcome and Stats Section -->
+        <div class="welcome-stats-container">
+          <!-- Welcome Card -->
+          <div class="welcome-card">
+            <div class="card-body">
+              <h2 class="welcome-title">
+                <i class="bi bi-stars"></i>
+                Welcome to Your Dashboard
+              </h2>
+              <p class="welcome-text">
+                Hello, <strong>{{ session('username', 'Manager') }}</strong>! This is your control center for managing all aspects of your business. Use the sidebar navigation to access different sections of the application.
+              </p>
             </div>
           </div>
           
-          <!-- Modify the stats row section -->
-          <div class="row g-2">
-            <div class="col-md-6 col-lg-6">
-                <div class="stat-card">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="stat-icon me-4">
-                                <i class="bi bi-ticket-perforated-fill"></i>
-                            </div>
-                            <div>
-                                <div class="stat-number">{{ $totalTickets }}</div>
-                                <div class="stat-label">Active Tickets</div>
-                            </div>
-                        </div>
-                        <a href="{{ route('dashboard.tickets') }}" class="btn btn-details">
-                            <i class="bi bi-arrow-right-circle me-1"></i> Details
-                        </a>
-                    </div>
+          <!-- Stats Container -->
+          <div class="stats-container">
+            <!-- Active Tickets Stat -->
+            <div class="stat-card">
+              <div class="card-body">
+                <div class="stat-content">
+                  <div class="stat-icon">
+                    <i class="bi bi-ticket-perforated-fill"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">{{ $totalTickets }}</div>
+                    <div class="stat-label">Active Tickets</div>
+                  </div>
                 </div>
-            </div>
-            <div class="col-md-6 col-lg-6">
-                <div class="stat-card">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="stat-icon me-4">
-                                <i class="bi bi-people-fill"></i>
-                            </div>
-                            <div>
-                                <div class="stat-number">{{ $totalLeads }}</div>
-                                <div class="stat-label">Potential Leads</div>
-                            </div>
-                        </div>
-                        <a href="{{ route('dashboard.leads') }}" class="btn btn-details">
-                            <i class="bi bi-arrow-right-circle me-1"></i> Details
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6">
-                <div class="stat-card">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="stat-icon me-4" style="background: linear-gradient(45deg, #f72585, #b5179e);">
-                                <i class="bi bi-currency-dollar"></i>
-                            </div>
-                            <div>
-                                <div class="stat-number">${{ $totalExpenses }}</div>
-                                <div class="stat-label">Total Expenses</div>
-                            </div>
-                        </div>
-                      <a href="{{ route('dashboard.expenses') }}" class="btn btn-details">
-                        <i class="bi bi-arrow-right-circle me-1"></i> Details
-                      </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 col-lg-6">
-                <div class="stat-card">
-                    <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <div class="stat-icon me-4" style="background: linear-gradient(45deg, #4cc9f0, #4895ef);">
-                                <i class="bi bi-wallet2"></i>
-                            </div>
-                            <div>
-                                <div class="stat-number">${{ $totalBudget }}</div>
-                                <div class="stat-label">Total Budget</div>
-                            </div>
-                        </div>
-                        <a href="{{ route('dashboard.budgets') }}" class="btn btn-details">
-                          <i class="bi bi-arrow-right-circle me-1"></i> Details
-                        </a>
-                    </div>
-                </div>
-            </div>
-          </div>
-
-          <!-- Analytics Section -->
-          <div class="section-divider">
-            <h2><i class="bi bi-bar-chart-line-fill"></i> Analytics</h2>
-            <div class="line"></div>
-          </div>
-
-          <div class="row g-4">
-            <!-- Ticket Status Chart (Pie Chart) -->
-            <div class="col-md-6 col-lg-6">
-              <div class="chart-card">
-                <div class="chart-title">
-                  <i class="bi bi-pie-chart-fill chart-icon"></i>
-                  Ticket Status Distribution
-                </div>
-                <div class="chart-container">
-                  <canvas id="ticketStatusChart"></canvas>
-                </div>
+                <a href="{{ route('dashboard.tickets') }}" class="btn btn-details">
+                  <span>View Details</span>
+                  <i class="bi bi-arrow-right"></i>
+                </a>
               </div>
             </div>
-
-            <!-- Monthly Expenses Chart (Bar Chart) -->
-            <div class="col-md-6 col-lg-6">
-              <div class="chart-card">
-                <div class="chart-title">
-                  <i class="bi bi-bar-chart-fill chart-icon"></i>
-                  Monthly Expenses
+            
+            <!-- Potential Leads Stat -->
+            <div class="stat-card">
+              <div class="card-body">
+                <div class="stat-content">
+                  <div class="stat-icon">
+                    <i class="bi bi-people-fill"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">{{ $totalLeads }}</div>
+                    <div class="stat-label">Potential Leads</div>
+                  </div>
                 </div>
-                <div class="chart-container">
-                  <canvas id="monthlyExpensesChart"></canvas>
-                </div>
-              </div>
-            </div>
-
-            <!-- Budget Evolution Chart (Line Chart) -->
-            <div class="col-md-12">
-              <div class="chart-card">
-                <div class="chart-title">
-                  <i class="bi bi-graph-up chart-icon"></i>
-                  Budget Evolution
-                </div>
-                <div class="chart-container">
-                  <canvas id="budgetEvolutionChart"></canvas>
-                </div>
+                <a href="{{ route('dashboard.leads') }}" class="btn btn-details">
+                  <span>View Details</span>
+                  <i class="bi bi-arrow-right"></i>
+                </a>
               </div>
             </div>
           </div>
         </div>
-      </main>
+
+        <!-- Analytics Section -->
+        <div class="chart-layout">
+          <div class="chart-section-header">
+            <h2 class="section-title">
+              <i class="bi bi-bar-chart-line-fill"></i>
+              Analytics
+            </h2>
+            <div class="section-line"></div>
+          </div>
+
+          <!-- Ticket Status Chart -->
+          <div class="pie-chart-card chart-card">
+            <div class="chart-header">
+              <div class="chart-icon">
+                <i class="bi bi-pie-chart-fill"></i>
+              </div>
+              <h3 class="chart-title">Ticket Status</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="ticketStatusChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Monthly Expenses Chart -->
+          <div class="bar-chart-card chart-card">
+            <div class="chart-header">
+              <div class="chart-icon">
+                <i class="bi bi-bar-chart-fill"></i>
+              </div>
+              <h3 class="chart-title">Monthly Expenses</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="monthlyExpensesChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Budget Evolution Chart -->
+          <div class="line-chart-card chart-card">
+            <div class="chart-header">
+              <div class="chart-icon">
+                <i class="bi bi-graph-up"></i>
+              </div>
+              <h3 class="chart-title">Budget Evolution</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="budgetEvolutionChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -415,6 +747,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <script>
+    // Get token from wherever it's stored (example: localStorage)
     const token = localStorage.getItem('auth_token') || '{{ session('token') }}';
     console.log('Token being used:', token);
 
@@ -436,18 +769,18 @@
         .join(' ');
     }
 
-    // Function to generate random colors
+    // Function to generate colors with better contrast
     function generateColors(count) {
       const colors = [
-        '#4361ee', '#3a0ca3', '#7209b7', '#f72585', '#4cc9f0',
-        '#480ca8', '#4895ef', '#560bad', '#b5179e', '#3f37c9'
+        '#3a86ff', '#4361ee', '#3a0ca3', '#7209b7', '#f72585', 
+        '#4cc9f0', '#480ca8', '#4895ef', '#560bad', '#b5179e'
       ];
 
       while (colors.length < count) {
-        const r = Math.floor(Math.random() * 255);
-        const g = Math.floor(Math.random() * 255);
-        const b = Math.floor(Math.random() * 255);
-        colors.push(`rgba(${r}, ${g}, ${b}, 0.7)`);
+        const r = Math.floor(Math.random() * 200);
+        const g = Math.floor(Math.random() * 200);
+        const b = Math.floor(Math.random() * 200);
+        colors.push(`rgba(${r}, ${g}, ${b}, 0.8)`);
       }
 
       return colors.slice(0, count);
@@ -476,6 +809,18 @@
         }
       }
 
+      // Chart.js global defaults
+      Chart.defaults.font.family = "'Plus Jakarta Sans', 'Segoe UI', sans-serif";
+      Chart.defaults.font.size = 13;
+      Chart.defaults.color = '#64748b';
+      Chart.defaults.plugins.tooltip.padding = 12;
+      Chart.defaults.plugins.tooltip.cornerRadius = 8;
+      Chart.defaults.plugins.tooltip.titleFont = { weight: '600', size: 14 };
+      Chart.defaults.plugins.tooltip.bodyFont = { size: 13 };
+      Chart.defaults.plugins.legend.labels.padding = 16;
+      Chart.defaults.plugins.legend.labels.boxWidth = 12;
+      Chart.defaults.plugins.legend.labels.boxHeight = 12;
+
       // TICKET STATUS PIE CHART
       fetchData('http://localhost:8080/api/dashboard/ticket-status')
         .then(data => {
@@ -484,16 +829,30 @@
           const colors = generateColors(data.length);
 
           new Chart(document.getElementById('ticketStatusChart'), {
-            type: 'pie',
+            type: 'doughnut',
             data: {
               labels: labels,
-              datasets: [{ data: values, backgroundColor: colors, borderWidth: 1 }]
+              datasets: [{ 
+                data: values, 
+                backgroundColor: colors, 
+                borderWidth: 2,
+                borderColor: '#ffffff',
+                hoverOffset: 10
+              }]
             },
             options: {
               responsive: true,
               maintainAspectRatio: false,
+              cutout: '65%',
               plugins: {
-                legend: { position: 'right', labels: { padding: 20, boxWidth: 15, font: { size: 12 } } },
+                legend: { 
+                  position: 'right', 
+                  labels: { 
+                    padding: 20, 
+                    boxWidth: 15, 
+                    font: { size: 12, weight: '500' } 
+                  } 
+                },
                 tooltip: {
                   callbacks: {
                     label: function(context) {
@@ -524,9 +883,11 @@
               datasets: [{
                 label: 'Total Expenses',
                 data: values,
-                backgroundColor: '#4361ee',
-                borderColor: '#3f37c9',
-                borderWidth: 1
+                backgroundColor: 'rgba(58, 134, 255, 0.8)',
+                borderColor: '#3a86ff',
+                borderWidth: 1,
+                borderRadius: 6,
+                hoverBackgroundColor: 'rgba(58, 134, 255, 1)'
               }]
             },
             options: {
@@ -535,11 +896,30 @@
               scales: {
                 y: {
                   beginAtZero: true,
-                  ticks: { callback: value => '$' + value.toLocaleString() }
+                  grid: {
+                    color: 'rgba(226, 232, 240, 0.5)',
+                    drawBorder: false
+                  },
+                  ticks: { 
+                    callback: value => '$' + value.toLocaleString(),
+                    font: { weight: '500' }
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false,
+                    drawBorder: false
+                  },
+                  ticks: { font: { weight: '500' } }
                 }
               },
               plugins: {
-                tooltip: { callbacks: { label: context => 'Expenses: $' + context.raw.toLocaleString() } }
+                legend: { display: false },
+                tooltip: { 
+                  callbacks: { 
+                    label: context => 'Expenses: $' + context.raw.toLocaleString() 
+                  } 
+                }
               }
             }
           });
@@ -568,29 +948,44 @@
                 {
                   label: 'Total Budget',
                   data: budgetValues,
-                  borderColor: '#4cc9f0',
-                  backgroundColor: 'rgba(76, 201, 240, 0.1)',
-                  borderWidth: 2,
+                  borderColor: '#3a86ff',
+                  backgroundColor: 'rgba(58, 134, 255, 0.1)',
+                  borderWidth: 3,
                   fill: true,
-                  tension: 0.3
+                  tension: 0.3,
+                  pointBackgroundColor: '#ffffff',
+                  pointBorderColor: '#3a86ff',
+                  pointBorderWidth: 2,
+                  pointRadius: 4,
+                  pointHoverRadius: 6
                 },
                 {
                   label: 'Expenses',
                   data: expenseValues,
-                  borderColor: '#f72585',
-                  backgroundColor: 'rgba(247, 37, 133, 0.1)',
-                  borderWidth: 2,
+                  borderColor: '#ef4444',
+                  backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                  borderWidth: 3,
                   fill: true,
-                  tension: 0.3
+                  tension: 0.3,
+                  pointBackgroundColor: '#ffffff',
+                  pointBorderColor: '#ef4444',
+                  pointBorderWidth: 2,
+                  pointRadius: 4,
+                  pointHoverRadius: 6
                 },
                 {
                   label: 'Remaining Budget',
                   data: remainingValues,
-                  borderColor: '#4361ee',
-                  backgroundColor: 'rgba(67, 97, 238, 0.1)',
-                  borderWidth: 2,
+                  borderColor: '#10b981',
+                  backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                  borderWidth: 3,
                   fill: true,
-                  tension: 0.3
+                  tension: 0.3,
+                  pointBackgroundColor: '#ffffff',
+                  pointBorderColor: '#10b981',
+                  pointBorderWidth: 2,
+                  pointRadius: 4,
+                  pointHoverRadius: 6
                 }
               ]
             },
@@ -598,10 +993,31 @@
               responsive: true,
               maintainAspectRatio: false,
               scales: {
-                y: { beginAtZero: true, ticks: { callback: value => '$' + value.toLocaleString() } }
+                y: { 
+                  beginAtZero: true, 
+                  grid: {
+                    color: 'rgba(226, 232, 240, 0.5)',
+                    drawBorder: false
+                  },
+                  ticks: { 
+                    callback: value => '$' + value.toLocaleString(),
+                    font: { weight: '500' }
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false,
+                    drawBorder: false
+                  },
+                  ticks: { font: { weight: '500' } }
+                }
               },
               plugins: {
-                tooltip: { callbacks: { label: context => context.dataset.label + ': $' + context.raw.toLocaleString() } }
+                tooltip: { 
+                  callbacks: { 
+                    label: context => context.dataset.label + ': $' + context.raw.toLocaleString() 
+                  } 
+                }
               }
             }
           });
