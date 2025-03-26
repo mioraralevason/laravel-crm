@@ -442,5 +442,5 @@ class DashboardController extends Controller
         }
 
         return view('main.dashboard-analytics');
-    }
+    }   
 }

@@ -302,6 +302,14 @@
       background: linear-gradient(to bottom, var(--info-color), var(--accent-color));
     }
 
+    .stat-card:nth-child(3)::before {
+      background: linear-gradient(to bottom, #f72585, #b5179e);
+    }
+
+    .stat-card:nth-child(4)::before {
+      background: linear-gradient(to bottom, #4cc9f0, #4895ef);
+    }
+
     .stat-card .card-body {
       padding: 1.5rem;
       display: flex;
@@ -332,6 +340,14 @@
 
     .stat-card:nth-child(2) .stat-icon {
       background: linear-gradient(135deg, var(--info-color), var(--accent-color));
+    }
+
+    .stat-card:nth-child(3) .stat-icon {
+      background: linear-gradient(135deg, #f72585, #b5179e);
+    }
+
+    .stat-card:nth-child(4) .stat-icon {
+      background: linear-gradient(135deg, #4cc9f0, #4895ef);
     }
 
     .stat-info {
@@ -374,6 +390,14 @@
 
     .stat-card:nth-child(2) .btn-details {
       background: linear-gradient(135deg, var(--info-color), var(--accent-color));
+    }
+
+    .stat-card:nth-child(3) .btn-details {
+      background: linear-gradient(135deg, #f72585, #b5179e);
+    }
+
+    .stat-card:nth-child(4) .btn-details {
+      background: linear-gradient(135deg, #4cc9f0, #4895ef);
     }
 
     .btn-details:hover {
@@ -504,19 +528,27 @@
       animation-delay: 0.1s;
     }
 
-    .pie-chart-card {
+    .stat-card:nth-child(3) {
       animation-delay: 0.2s;
     }
 
-    .bar-chart-card {
+    .stat-card:nth-child(4) {
       animation-delay: 0.3s;
     }
 
-    .line-chart-card {
+    .pie-chart-card {
       animation-delay: 0.4s;
     }
 
-    /* Responsive Adjustments - Matching previous behavior */
+    .bar-chart-card {
+      animation-delay: 0.5s;
+    }
+
+    .line-chart-card {
+      animation-delay: 0.6s;
+    }
+
+    /* Responsive Adjustments */
     @media (max-width: 768px) {
       .dashboard-content {
         margin-left: 80px;
@@ -643,7 +675,7 @@
                 Welcome to Your Dashboard
               </h2>
               <p class="welcome-text">
-                Hello, <strong>{{ session('username', 'Manager') }}</strong>! This is your control center for managing all aspects of your business. Use the sidebar navigation to access different sections of the application.
+                Hello, <strong>{{ session('username', 'Manager') }}</strong>
               </p>
             </div>
           </div>
@@ -682,6 +714,44 @@
                   </div>
                 </div>
                 <a href="{{ route('dashboard.leads') }}" class="btn btn-details">
+                  <span>View Details</span>
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Total Expenses Stat -->
+            <div class="stat-card">
+              <div class="card-body">
+                <div class="stat-content">
+                  <div class="stat-icon">
+                    <i class="bi bi-currency-dollar"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">${{ number_format($totalExpenses, 2, '.', ',') }}</div>
+                    <div class="stat-label">Total Expenses</div>
+                  </div>
+                </div>
+                <a href="{{ route('dashboard.expenses') }}" class="btn btn-details">
+                  <span>View Details</span>
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Total Budget Stat -->
+            <div class="stat-card">
+              <div class="card-body">
+                <div class="stat-content">
+                  <div class="stat-icon">
+                    <i class="bi bi-wallet2"></i>
+                  </div>
+                  <div class="stat-info">
+                    <div class="stat-number">${{ number_format($totalBudget, 2, '.', ',') }}</div>
+                    <div class="stat-label">Total Budget</div>
+                  </div>
+                </div>
+                <a href="{{ route('dashboard.budgets') }}" class="btn btn-details">
                   <span>View Details</span>
                   <i class="bi bi-arrow-right"></i>
                 </a>
